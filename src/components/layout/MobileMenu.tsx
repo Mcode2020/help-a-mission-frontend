@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Heart, X } from 'lucide-react';
-import { navItems } from './Navbar';
+import { navItems } from '../../constants/navigation';
 import logoImg from '../../assets/logo.png';
 
 interface MobileMenuProps {
