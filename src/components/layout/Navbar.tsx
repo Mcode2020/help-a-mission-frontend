@@ -3,18 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Heart, Menu, X } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 
+import { navItems } from '../../constants/navigation';
+
 interface NavbarProps {
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-export const navItems = [
-  { name: 'Home', path: '/' },
-  { name: 'About Us', path: '/about' },
-  { name: 'Our Work', path: '/our-work' },
-  { name: 'Campaigns', path: '/campaigns' },
-  { name: 'Contact', path: '/contact' },
-];
 
 export const Navbar: React.FC<NavbarProps> = ({
   isMobileMenuOpen,
