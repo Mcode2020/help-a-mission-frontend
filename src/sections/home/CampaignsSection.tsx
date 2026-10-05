@@ -13,32 +13,32 @@ export const CampaignsSection: React.FC = () => {
       image: campaignBlood,
       title: 'Blood Donation Camps',
       description: 'Organizing blood donation drives to save lives and support local medical health centers.',
-      link: '/campaigns/blood-donation',
+      link: '/campaigns',
     },
     {
       image: campaignFinancial,
       title: 'Financial Assistance Program',
       description: 'Providing direct financial aid to needy individuals and families facing medical or social hardship.',
-      link: '/campaigns/financial-aid',
+      link: '/campaigns',
     },
     {
       image: campaignEducation,
       title: 'Educational Support Drive',
       description: 'Empowering children with books, tuition support, and essential school kits for a brighter future.',
-      link: '/campaigns/educational-support',
+      link: '/campaigns',
     },
     {
       image: campaignCommunity,
       title: 'Community Development',
       description: 'Distributing essential goods, winter blankets, and food rations during relief campaigns.',
-      link: '/campaigns/community-development',
+      link: '/campaigns',
     },
   ];
 
   return (
     <section className="py-16 sm:py-24 bg-teal-50/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="space-y-3 mb-12 text-left">
           <div className="inline-flex items-center gap-2 text-teal-600 text-xs sm:text-sm font-bold tracking-wider uppercase">
