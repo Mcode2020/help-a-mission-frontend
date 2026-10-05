@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Heart } from 'lucide-react';
+import { Card, Button, Input, Badge } from '../../components/ui';
+import { CheckCircle2, Heart, ShieldCheck, Download } from 'lucide-react';
 import donateImg from '../../assets/donate_img.jpg';
+import { api, loadRazorpayScript } from '../../services/api';
+import type { DonationReceipt } from '../../types';
 
 export const DonationSection: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(1000);
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
+    pan: '',
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [receipt, setReceipt] = useState<DonationReceipt | null>(null);
 
   const predefinedAmounts = [500, 1000, 2500, 5000];
 
@@ -19,10 +25,46 @@ export const DonationSection: React.FC = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 4000);
+    const finalAmount = selectedAmount === 'custom' ? Number(customAmount) : selectedAmount;
+    if (!finalAmount || finalAmount < 10) {
+      alert('Please specify a valid amount of at least ₹10.');
+      return;
+    }
+    if (!formData.firstName || !formData.email) {
+      alert('Please enter your first name and email.');
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      await loadRazorpayScript();
+      const order = await api.createDonationOrder({
+        amount: finalAmount,
+        donorName: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        phone: formData.phone,
+        pan: formData.pan,
+        frequency,
+        campaignId: 'home-widget',
+      });
+
+      const receiptRes = await api.verifyDonationPayment({
+        donationId: order.donationId,
+        orderId: order.orderId,
+        paymentId: `pay_rzp_${Date.now()}`,
+        signature: `sim_sig_${order.orderId}_pay_rzp_${Date.now()}`,
+      });
+
+      setReceipt(receiptRes);
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Payment error';
+      alert(`Donation processing error: ${errorMsg}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -32,187 +74,234 @@ export const DonationSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Info & Image */}
-          <div className="lg:col-span-6 space-y-6">
+          <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center gap-2 text-teal-600 text-xs sm:text-sm font-bold tracking-wider uppercase">
               <span className="w-8 h-[2px] bg-teal-600"></span>
               <span>MAKE A DONATION</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              Make a Difference Today
+              Make a Real Difference Today
             </h2>
 
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-              Every contribution helps us provide food, healthcare, and education to those in need.
+              Every single rupee directly empowers life-saving blood donation camps, child education sponsorships, and emergency family relief across Jind.
             </p>
 
             {/* Checklist */}
             <div className="flex flex-wrap items-center gap-6 pt-2 text-xs sm:text-sm font-bold text-gray-800">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-teal-500" />
-                <span>Tax Exemption</span>
+                <span>50% 80G Tax Exemption</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-teal-500" />
-                <span>100% Direct Impact</span>
+                <span>100% Volunteer Driven</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-teal-500" />
-                <span>Easy & Secure</span>
+                <span>Instant Digital Tax Receipt</span>
               </div>
             </div>
 
-            {/* Image Below Text */}
-            <div className="pt-4">
-              <div className="rounded-3xl overflow-hidden shadow-md border border-gray-100 h-64 sm:h-72">
-                <img
-                  src={donateImg}
-                  alt="Hands holding globe"
-                  className="w-full h-full object-cover"
-                />
+            {/* Image Box */}
+            <div className="relative rounded-3xl overflow-hidden shadow-xl border border-gray-100 group">
+              <img
+                src={donateImg}
+                alt="Every Contribution Brings Hope"
+                className="w-full h-[320px] object-cover group-hover:scale-102 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <p className="text-white text-sm font-semibold italic">
+                  "No act of kindness, no matter how small, is ever wasted."
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Donation Form Card */}
+          {/* Right Column: Donation Form / Receipt Card */}
           <div className="lg:col-span-6">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-100 space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Donation Fund</h3>
-                <p className="text-xs text-gray-500 mt-1">
-                  Choose an amount or enter your own custom amount.
-                </p>
-              </div>
+            <Card className="p-6 sm:p-8 shadow-xl border-teal-500/20">
+              {receipt ? (
+                <div className="text-center space-y-6 py-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <Badge variant="success">PAYMENT VERIFIED VIA RAZORPAY</Badge>
+                    <h3 className="text-2xl font-bold text-slate-900 mt-2">
+                      Thank You, {receipt.donorName}!
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Your contribution makes our welfare operations possible.
+                    </p>
+                  </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Amount Filter Pills */}
-                <div className="grid grid-cols-5 gap-2">
-                  {predefinedAmounts.map((amt) => (
-                    <button
-                      type="button"
-                      key={amt}
+                  <div className="bg-slate-50 p-5 rounded-2xl border text-left text-xs space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Receipt No:</span>
+                      <strong className="font-mono">{receipt.receiptNumber}</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Amount Paid:</span>
+                      <strong className="text-teal-600 text-base">₹{receipt.amount}</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Payment ID:</span>
+                      <span className="font-mono text-xs">{receipt.paymentId}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="text-slate-500">80G Certificate:</span>
+                      <span className="font-bold text-emerald-600">{receipt.certificate80G}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button variant="primary" className="flex-1" onClick={() => window.print()}>
+                      <Download className="w-4 h-4 mr-2" /> Download Receipt
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1"
                       onClick={() => {
-                        setSelectedAmount(amt);
+                        setReceipt(null);
                         setCustomAmount('');
                       }}
-                      className={`py-2 px-1 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
-                        selectedAmount === amt
-                          ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
-                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-400'
+                    >
+                      Give Again
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Frequency Toggle */}
+                  <div className="flex bg-slate-100 p-1.5 rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setFrequency('once')}
+                      className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                        frequency === 'once'
+                          ? 'bg-white text-teal-600 shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
-                      ₹{amt}
+                      Give Once
                     </button>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedAmount('custom')}
-                    className={`py-2 px-1 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
-                      selectedAmount === 'custom'
-                        ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
-                        : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-400'
-                    }`}
-                  >
-                    Custom
-                  </button>
-                </div>
-
-                {/* Custom Amount Input if Selected */}
-                {selectedAmount === 'custom' && (
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Enter Custom Amount (₹) *
-                    </label>
-                    <input
-                      type="number"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                      placeholder="e.g. 1500"
-                      required
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => setFrequency('monthly')}
+                      className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                        frequency === 'monthly'
+                          ? 'bg-white text-teal-600 shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Monthly Supporter
+                    </button>
                   </div>
-                )}
 
-                {/* Name Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
+                  {/* Predefined Amounts Grid */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold text-slate-700">Select Amount</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {predefinedAmounts.map((amount) => (
+                        <button
+                          key={amount}
+                          type="button"
+                          onClick={() => {
+                            setSelectedAmount(amount);
+                            setCustomAmount('');
+                          }}
+                          className={`py-2.5 rounded-xl font-extrabold text-sm transition-all border cursor-pointer ${
+                            selectedAmount === amount && !customAmount
+                              ? 'bg-teal-500 text-white border-teal-500 shadow-md shadow-teal-500/20'
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-teal-500'
+                          }`}
+                        >
+                          ₹{amount}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Custom Amount Field */}
+                  <Input
+                    type="number"
+                    placeholder="Enter custom amount in ₹"
+                    value={customAmount}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      setSelectedAmount('custom');
+                    }}
+                  />
+
+                  {/* Donor Info */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      label="First Name"
                       name="firstName"
+                      placeholder="e.g. Amit"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      placeholder="First Name"
                       required
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50/50"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
+                    <Input
+                      label="Last Name"
                       name="lastName"
+                      placeholder="e.g. Sharma"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      placeholder="Last Name"
-                      required
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50/50"
                     />
                   </div>
-                </div>
 
-                {/* Contact Fields */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Enter your email address"
-                    required
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50/50"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                    required
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-gray-50/50"
-                  />
-                </div>
-
-                {/* Submit CTA */}
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-md shadow-teal-500/25 active:scale-98 transition-all text-sm"
-                >
-                  <Heart className="w-4 h-4 fill-white/20" />
-                  <span>Donate Now</span>
-                </button>
-
-                {isSubmitted && (
-                  <div className="p-3 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl text-center">
-                    Thank you for your generous pledge! Our team will contact you directly with receipt details.
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      label="Email Address"
+                      name="email"
+                      type="email"
+                      placeholder="e.g. amit@example.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <Input
+                      label="Phone Number"
+                      name="phone"
+                      type="tel"
+                      placeholder="+91 98123 45678"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
-              </form>
-            </div>
+
+                  <Input
+                    label="PAN Card (Required for 80G Tax Exemption)"
+                    name="pan"
+                    placeholder="e.g. ABCDE1234F"
+                    value={formData.pan}
+                    onChange={(e) => setFormData({ ...formData, pan: e.target.value.toUpperCase() })}
+                    maxLength={10}
+                  />
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    className="w-full"
+                    isLoading={isProcessing}
+                  >
+                    <Heart className="w-5 h-5 mr-2 fill-current" />
+                    Donate ₹{customAmount || selectedAmount} with Razorpay
+                  </Button>
+
+                  <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                    <span>Instant 80G Tax Receipt via Razorpay Secure Gateway</span>
+                  </div>
+                </form>
+              )}
+            </Card>
           </div>
 
         </div>
@@ -221,3 +310,5 @@ export const DonationSection: React.FC = () => {
     </section>
   );
 };
+
+export default DonationSection;
