@@ -13,16 +13,16 @@ import {
 } from 'lucide-react';
 import { CAMPAIGNS } from '../../data/ngoData';
 import type { Campaign } from '../../data/ngoData';
-import campaignEducationImg from '../../assets/campaign_education.jpg';
-import campaignBloodImg from '../../assets/campaign_blood.jpg';
-import campaignCommunityImg from '../../assets/campaign_community.jpg';
-import campaignFinancialImg from '../../assets/campaign_financial.jpg';
+import campaignEducationImg from '../../assets/campaign_education.png';
+import campaignBloodImg from '../../assets/campaign_blood.png';
+import campaignCommunityImg from '../../assets/campaign_community.png';
+import campaignFinancialImg from '../../assets/campaign_financial.png';
 
 const imageMap: Record<string, string> = {
-  '/src/assets/campaign_education.jpg': campaignEducationImg,
-  '/src/assets/campaign_blood.jpg': campaignBloodImg,
-  '/src/assets/campaign_community.jpg': campaignCommunityImg,
-  '/src/assets/campaign_financial.jpg': campaignFinancialImg
+  '/src/assets/campaign_education.png': campaignEducationImg,
+  '/src/assets/campaign_blood.png': campaignBloodImg,
+  '/src/assets/campaign_community.png': campaignCommunityImg,
+  '/src/assets/campaign_financial.png': campaignFinancialImg
 };
 
 export const Campaigns: React.FC = () => {
@@ -84,11 +84,10 @@ export const Campaigns: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
-                    : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${selectedCategory === cat
+                  ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
+                  : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
+                  }`}
               >
                 {cat}
               </button>
@@ -109,11 +108,10 @@ export const Campaigns: React.FC = () => {
             </div>
             <button
               onClick={() => setOnlyUrgent(!onlyUrgent)}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border transition-colors ${
-                onlyUrgent
-                  ? 'bg-rose-50 border-rose-300 text-rose-700'
-                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
-              }`}
+              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border transition-colors ${onlyUrgent
+                ? 'bg-rose-50 border-rose-300 text-rose-700'
+                : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                }`}
             >
               <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
               <span>Urgent Only</span>
@@ -361,11 +359,10 @@ export const Campaigns: React.FC = () => {
                         key={amt}
                         type="button"
                         onClick={() => setCustomAmount(amt)}
-                        className={`py-2 rounded-xl text-xs font-extrabold border transition-all ${
-                          customAmount === amt
-                            ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
-                            : 'bg-slate-50 border-gray-200 text-gray-700 hover:bg-slate-100'
-                        }`}
+                        className={`py-2 rounded-xl text-xs font-extrabold border transition-all ${customAmount === amt
+                          ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
+                          : 'bg-slate-50 border-gray-200 text-gray-700 hover:bg-slate-100'
+                          }`}
                       >
                         ₹{amt}
                       </button>

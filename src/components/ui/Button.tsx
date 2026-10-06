@@ -30,13 +30,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary:
-        'bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white shadow-md shadow-teal-700/20 focus:ring-teal-500',
+        'bg-[#08A49C] hover:bg-[#068d86] text-white shadow-md shadow-[#08A49C]/20 focus:ring-[#08A49C]',
       secondary:
         'bg-slate-900 text-white hover:bg-slate-800 shadow-sm focus:ring-slate-900 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100',
       outline:
-        'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-slate-400',
+        'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4B5563] dark:text-slate-200 focus:ring-slate-400',
       ghost:
-        'bg-transparent hover:bg-teal-50 dark:hover:bg-teal-950/40 text-teal-700 dark:text-teal-400 focus:ring-teal-500',
+        'bg-transparent hover:bg-[#08A49C]/10 text-[#08A49C] focus:ring-[#08A49C]',
       danger:
         'bg-rose-600 hover:bg-rose-700 text-white shadow-sm focus:ring-rose-500',
     };

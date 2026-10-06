@@ -16,7 +16,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { TEAM_MEMBERS, MILESTONES } from '../../data/ngoData';
-import aboutImg from '../../assets/about_img.jpg';
+import aboutImg from '../../assets/about_img.png';
 
 const milestoneIcons: Record<string, React.ReactNode> = {
   Building: <Building className="w-6 h-6 text-teal-600" />,

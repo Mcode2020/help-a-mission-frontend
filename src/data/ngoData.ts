@@ -127,7 +127,7 @@ export const CAMPAIGNS: Campaign[] = [
     raisedAmount: 375000,
     donorsCount: 240,
     daysLeft: 18,
-    image: '/src/assets/campaign_education.jpg',
+    image: '/src/assets/campaign_education.png',
     urgent: true,
     featured: true,
     budgetBreakdown: [
@@ -147,7 +147,7 @@ export const CAMPAIGNS: Campaign[] = [
     raisedAmount: 220000,
     donorsCount: 165,
     daysLeft: 25,
-    image: '/src/assets/campaign_blood.jpg',
+    image: '/src/assets/campaign_blood.png',
     urgent: false,
     featured: true,
     budgetBreakdown: [
@@ -167,7 +167,7 @@ export const CAMPAIGNS: Campaign[] = [
     raisedAmount: 310000,
     donorsCount: 198,
     daysLeft: 12,
-    image: '/src/assets/campaign_community.jpg',
+    image: '/src/assets/campaign_community.png',
     urgent: true,
     featured: true,
     budgetBreakdown: [
@@ -186,7 +186,7 @@ export const CAMPAIGNS: Campaign[] = [
     raisedAmount: 185000,
     donorsCount: 112,
     daysLeft: 30,
-    image: '/src/assets/campaign_financial.jpg',
+    image: '/src/assets/campaign_financial.png',
     urgent: false,
     featured: false,
     budgetBreakdown: [
