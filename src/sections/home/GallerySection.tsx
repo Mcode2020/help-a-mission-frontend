@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -60,7 +60,7 @@ export const GallerySection: React.FC = () => {
         {/* 3x3 Photo Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryPhotos.map((photo) => (
-            <div
+            <Card
               key={photo.id}
               className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-slate-100"
             >
@@ -75,10 +75,38 @@ export const GallerySection: React.FC = () => {
                   {photo.title}
                 </p>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedPhoto && (
+        <Modal
+          isOpen={Boolean(selectedPhoto)}
+          onClose={() => setSelectedPhoto(null)}
+          title={selectedPhoto.title}
+          maxWidth="4xl"
+        >
+          <div className="space-y-4">
+            <div className="rounded-2xl overflow-hidden max-h-[70vh] flex items-center justify-center bg-black">
+              <img
+                src={selectedPhoto.img}
+                alt={selectedPhoto.title}
+                className="w-full h-full max-h-[70vh] object-contain"
+              />
+            </div>
+            <div className="flex items-center justify-between text-xs text-slate-500 pt-2">
+              <span>Help-A-Mission Welfare Society JIND</span>
+              <Button size="sm" variant="outline" onClick={() => setSelectedPhoto(null)}>
+                Close Preview
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </section>
   );
 };
+
+export default GallerySection;

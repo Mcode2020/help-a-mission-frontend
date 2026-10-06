@@ -72,6 +72,9 @@ export const CampaignsSection: React.FC = () => {
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute top-3 left-3">
+                  <Badge variant="teal">{item.category}</Badge>
+                </div>
               </div>
 
               {/* Card Body */}
@@ -95,7 +98,7 @@ export const CampaignsSection: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>
