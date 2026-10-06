@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { navItems } from '../../constants/navigation';
 import logoImg from '../../assets/logo.png';
+import { Button } from '../ui';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -57,11 +58,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             <img
               src={logoImg}
               alt="Logo"
-              className="w-10 h-10 rounded-full border border-teal-500/30 object-cover"
+              className="w-10 h-10 rounded-full border border-[#08A49C]/30 object-cover"
             />
             <div>
               <p className="font-bold text-gray-900 text-sm leading-tight">Help-A-Mission</p>
-              <p className="text-[10px] text-teal-700 font-semibold uppercase">Welfare Society JIND</p>
+              <p className="text-[10px] text-[#08A49C] font-semibold uppercase">Welfare Society JIND</p>
             </div>
           </div>
           <button
@@ -69,7 +70,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             className="p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-200/60 transition-colors"
             aria-label="Close menu"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-[#4B5563]" />
           </button>
         </div>
 
@@ -82,8 +83,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                 key={item.name}
                 to={item.path}
                 className={`flex items-center px-4 py-3 rounded-xl font-medium text-base transition-all ${isActive
-                  ? 'text-teal-700 bg-teal-50 font-semibold shadow-xs border-l-4 border-teal-600'
-                  : 'text-gray-700 hover:text-teal-600 hover:bg-gray-50'
+                  ? 'text-[#08A49C] bg-[#08A49C]/10 font-semibold border-l-4 border-[#08A49C]'
+                  : 'text-[#4B5563] hover:text-[#08A49C] hover:bg-gray-50'
                   }`}
               >
                 {item.name}
@@ -94,12 +95,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
         {/* Mobile Action & Contact Info */}
         <div className="p-4 border-t border-gray-100 bg-slate-50 space-y-4">
-          <Link
-            to="/donate"
-            className="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-xl font-semibold shadow-md shadow-teal-600/20 active:scale-98 transition-all"
-          >
-            <Heart className="w-5 h-5 fill-white/20" />
-            <span>Donate Now</span>
+          <Link to="/donate" className="w-full block">
+            <Button variant="primary" className="w-full py-3 rounded-full font-semibold">
+              Donate Now
+            </Button>
           </Link>
         </div>
       </div>

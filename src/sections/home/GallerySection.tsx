@@ -1,56 +1,57 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Button, Modal } from '../../components/ui';
-import { Eye, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
-import campaignBlood from '../../assets/campaign_blood.jpg';
-import campaignFinancial from '../../assets/campaign_financial.jpg';
-import campaignEducation from '../../assets/campaign_education.jpg';
-import campaignCommunity from '../../assets/campaign_community.jpg';
-import heroBg from '../../assets/hero_bg.jpg';
-import aboutImg from '../../assets/about_img.jpg';
+import gallery1 from '../../assets/gallery-1.png';
+import gallery2 from '../../assets/gallery-2.png';
+import campaignFinancial from '../../assets/campaign_financial.png';
 
 export const GallerySection: React.FC = () => {
-  const [selectedPhoto, setSelectedPhoto] = useState<{ id: number; img: string; title: string } | null>(null);
-
+  // 9 Gallery photos matching exact 3x3 grid UI design
   const galleryPhotos = [
-    { id: 1, img: heroBg, title: 'Team Meeting & Event Setup in Jind' },
-    { id: 2, img: campaignFinancial, title: 'Financial Aid Grant Distribution' },
-    { id: 3, img: campaignCommunity, title: 'Community Welfare & Blanket Distribution' },
-    { id: 4, img: campaignEducation, title: 'Child Education Stationery Kits Drive' },
-    { id: 5, img: campaignBlood, title: 'Blood Donation Camp Organizing Team' },
-    { id: 6, img: aboutImg, title: 'Social Welfare & Health Awareness Camp' },
-    { id: 7, img: heroBg, title: 'Volunteer Orientation & Field Planning' },
-    { id: 8, img: campaignFinancial, title: 'Medical Assistance Cheque Handover' },
-    { id: 9, img: campaignCommunity, title: 'Public Felicitation & Relief Ceremony' },
+    { id: 1, img: gallery1, title: 'Welfare Cheque Distribution' },
+    { id: 2, img: gallery2, title: 'School Support Contribution' },
+    { id: 3, img: campaignFinancial, title: 'Community Aid Felicitation' },
+    { id: 4, img: gallery1, title: 'Welfare Cheque Distribution' },
+    { id: 5, img: gallery2, title: 'School Support Contribution' },
+    { id: 6, img: campaignFinancial, title: 'Community Aid Felicitation' },
+    { id: 7, img: gallery1, title: 'Welfare Cheque Distribution' },
+    { id: 8, img: gallery2, title: 'School Support Contribution' },
+    { id: 9, img: campaignFinancial, title: 'Community Aid Felicitation' },
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <section className="py-[60px] md:py-[100px] bg-white">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-[80px]">
         {/* Header with Top-Right Button */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="space-y-3 max-w-2xl text-left">
-            <div className="inline-flex items-center gap-2 text-teal-600 text-xs sm:text-sm font-bold tracking-wider uppercase">
-              <span className="w-8 h-[2px] bg-teal-600"></span>
-              <span>OUR GALLERY</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-[48px] gap-6">
+          <div className="space-y-2 max-w-2xl">
+            {/* Category Pill with Horizontal Line */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-7 h-[2.5px] bg-[#08A49C] rounded-full"></span>
+              <span className="text-[#08A49C] text-xs sm:text-sm font-bold uppercase tracking-wider">
+                OUR GALLERY
+              </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight">
-              Moments That Inspire Hope
+            <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-extrabold text-slate-900 tracking-tight leading-tight">
+              Moments That Matter
             </h2>
 
-            <p className="text-gray-600 text-base sm:text-lg">
-              A glimpse of our community work, blood donation drives, and celebrations across Jind district.
+            <p className="text-slate-500 text-sm sm:text-base mt-2 leading-relaxed">
+              A glimpse of our recent activities, health camps and social initiatives.
             </p>
           </div>
 
           <div className="shrink-0">
-            <Link to="/campaigns">
-              <Button variant="outline">
-                <span>View All Campaigns</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
+            <Link to="/our-work">
+              <Button
+                variant="primary"
+                className="rounded-full font-semibold px-6 py-3 text-xs sm:text-sm"
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+              >
+                View All Photos
               </Button>
             </Link>
           </div>
@@ -61,26 +62,22 @@ export const GallerySection: React.FC = () => {
           {galleryPhotos.map((photo) => (
             <Card
               key={photo.id}
-              onClick={() => setSelectedPhoto(photo)}
-              className="relative group overflow-hidden rounded-2xl cursor-pointer aspect-4/3 shadow-sm hover:shadow-xl transition-all duration-300"
+              className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-slate-100"
             >
               <img
                 src={photo.img}
                 alt={photo.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              {/* Hover Dark Overlay with Icon & Title */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <div className="flex items-center gap-2 text-teal-300 text-xs font-bold uppercase mb-1">
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>Click to Expand</span>
-                </div>
-                <h4 className="font-bold text-base leading-snug">{photo.title}</h4>
+              {/* Subtle hover gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                <p className="text-white text-sm font-medium tracking-wide">
+                  {photo.title}
+                </p>
               </div>
             </Card>
           ))}
         </div>
-
       </div>
 
       {/* Lightbox Modal */}

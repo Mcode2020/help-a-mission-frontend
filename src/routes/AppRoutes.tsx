@@ -1,22 +1,21 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home/Home';
-import AboutPage from '../pages/About/AboutPage';
-import CampaignsPage from '../pages/Campaigns/CampaignsPage';
-import CampaignDetailPage from '../pages/Campaigns/CampaignDetailPage';
-import DonatePage from '../pages/Donate/DonatePage';
-import ContactPage from '../pages/Contact/ContactPage';
+import About from '../pages/About/About';
+import Campaigns from '../pages/Campaigns/Campaigns';
+import OurWork from '../pages/OurWork/OurWork';
+import Donate from '../pages/Donate/Donate';
+import Contact from '../pages/Contact/Contact';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/our-work" element={<CampaignsPage />} />
-      <Route path="/campaigns" element={<CampaignsPage />} />
-      <Route path="/campaigns/:slug" element={<CampaignDetailPage />} />
-      <Route path="/donate" element={<DonatePage />} />
-      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/our-work" element={<OurWork />} />
+      <Route path="/campaigns" element={<Campaigns />} />
+      <Route path="/donate" element={<Donate />} />
+      <Route path="/contact" element={<Contact />} />
     </Routes>
   );
 };
