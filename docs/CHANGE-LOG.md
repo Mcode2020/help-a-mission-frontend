@@ -20,3 +20,27 @@
   - `npm run build`: Vite production bundle generated cleanly in 1.85s (PASS)
   - `verify-gate`: passed (`code_claim_allowed: true`)
 
+## 2026-10-05 — Secondary Pages, Razorpay Checkout & Interactive UI (feature)
+- **Date**: 2026-10-05
+- **Type**: feature / pages / payment / ui
+- **Problem**:
+  - Secondary pages (`/about`, `/campaigns`, `/donate`, `/contact`) are placeholders.
+  - Home page lacks full-screen image lightbox, dynamic campaign progress meters, volunteer modal, and live Razorpay donation checkout.
+  - Missing design system input primitives (`Input`, `Select`, `Textarea`, `Modal`).
+- **Design / Solution**:
+  - Scaffold UI primitives: `Input`, `Select`, `Textarea`, `Modal`.
+  - Implement full pages:
+    - `AboutPage`: NGO history, Regd. No. 01667 credentials, mission/vision, leadership, 80G tax exemption.
+    - `CampaignsPage` & `CampaignDetailPage`: Category filters, progress meters, campaign detail story, and donation action.
+    - `DonatePage`: Standalone donation portal with Razorpay checkout, 80G tax deduction breakdown, and receipt download.
+    - `ContactPage`: Contact inquiry form with validation, volunteer application, Jind office details, and interactive links.
+  - Implement Razorpay checkout script integration (`checkout.razorpay.com`) in `src/services/api.ts`.
+  - Connect all routes in `src/routes/AppRoutes.tsx`.
+- **Status**: done
+- **Verified**:
+  - `npm run lint`: 0 errors / 0 warnings (PASS)
+  - `npm run build`: Vite production bundle generated cleanly in 2.57s (PASS)
+  - `verify-gate`: passed (`code_claim_allowed: true`)
+
+
+

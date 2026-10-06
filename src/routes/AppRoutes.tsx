@@ -1,24 +1,24 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home/Home';
-
-// Placeholder view for secondary pages
-const PagePlaceholder: React.FC<{ title: string }> = ({ title }) => (
-  <div className="py-20 max-w-7xl mx-auto px-4 text-center">
-    <h1 className="text-3xl font-extrabold text-gray-900">{title}</h1>
-    <p className="mt-3 text-gray-600">This section is being updated with active campaigns and details.</p>
-  </div>
-);
+import AboutPage from '../pages/About/AboutPage';
+import CampaignsPage from '../pages/Campaigns/CampaignsPage';
+import CampaignDetailPage from '../pages/Campaigns/CampaignDetailPage';
+import DonatePage from '../pages/Donate/DonatePage';
+import ContactPage from '../pages/Contact/ContactPage';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<PagePlaceholder title="About Us" />} />
-      <Route path="/our-work" element={<PagePlaceholder title="Our Work" />} />
-      <Route path="/campaigns" element={<PagePlaceholder title="Campaigns" />} />
-      <Route path="/contact" element={<PagePlaceholder title="Contact Us" />} />
-      <Route path="/donate" element={<PagePlaceholder title="Donate Now" />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/our-work" element={<CampaignsPage />} />
+      <Route path="/campaigns" element={<CampaignsPage />} />
+      <Route path="/campaigns/:slug" element={<CampaignDetailPage />} />
+      <Route path="/donate" element={<DonatePage />} />
+      <Route path="/contact" element={<ContactPage />} />
     </Routes>
   );
 };
+
+export default AppRoutes;

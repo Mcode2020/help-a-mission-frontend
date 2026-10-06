@@ -1,96 +1,108 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-
-import campaignBlood from '../../assets/campaign_blood.jpg';
-import campaignFinancial from '../../assets/campaign_financial.jpg';
-import campaignEducation from '../../assets/campaign_education.jpg';
-import campaignCommunity from '../../assets/campaign_community.jpg';
+import { ArrowRight, Heart, Users } from 'lucide-react';
+import { Card, Badge, Button } from '../../components/ui';
+import { FALLBACK_CAMPAIGNS } from '../../services/api';
 
 export const CampaignsSection: React.FC = () => {
-  const campaigns = [
-    {
-      image: campaignBlood,
-      title: 'Blood Donation Camps',
-      description: 'Organizing blood donation drives to save lives and support local medical health centers.',
-      link: '/campaigns/blood-donation',
-    },
-    {
-      image: campaignFinancial,
-      title: 'Financial Assistance Program',
-      description: 'Providing direct financial aid to needy individuals and families facing medical or social hardship.',
-      link: '/campaigns/financial-aid',
-    },
-    {
-      image: campaignEducation,
-      title: 'Educational Support Drive',
-      description: 'Empowering children with books, tuition support, and essential school kits for a brighter future.',
-      link: '/campaigns/educational-support',
-    },
-    {
-      image: campaignCommunity,
-      title: 'Community Development',
-      description: 'Distributing essential goods, winter blankets, and food rations during relief campaigns.',
-      link: '/campaigns/community-development',
-    },
-  ];
-
   return (
     <section className="py-16 sm:py-24 bg-teal-50/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="space-y-3 mb-12 text-left">
-          <div className="inline-flex items-center gap-2 text-teal-600 text-xs sm:text-sm font-bold tracking-wider uppercase">
-            <span className="w-8 h-[2px] bg-teal-600"></span>
-            <span>OUR WORK</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="space-y-3 max-w-2xl text-left">
+            <div className="inline-flex items-center gap-2 text-teal-600 text-xs sm:text-sm font-bold tracking-wider uppercase">
+              <span className="w-8 h-[2px] bg-teal-600"></span>
+              <span>OUR WORK</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight">
+              Creating Impact Through Dedicated Initiatives
+            </h2>
+
+            <p className="text-gray-600 text-base sm:text-lg">
+              We focus our efforts on creating lasting change in the community through medical camps, education support, and direct relief drives.
+            </p>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight">
-            Creating Impact Through Meaningful Initiatives
-          </h2>
-
-          <p className="text-gray-600 text-base sm:text-lg max-w-3xl">
-            We focus our efforts on creating lasting change in the community through dedicated campaigns and direct relief drives.
-          </p>
+          <div className="shrink-0">
+            <Link to="/campaigns">
+              <Button variant="outline">
+                <span>View All Initiatives</span>
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {campaigns.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-100 transition-all duration-300 flex flex-col group"
+          {FALLBACK_CAMPAIGNS.map((item) => (
+            <Card
+              key={item.id}
+              className="overflow-hidden flex flex-col group hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
             >
-              {/* Image Container */}
-              <div className="relative h-56 overflow-hidden bg-gray-100">
+              {/* Image Frame */}
+              <div className="relative h-48 overflow-hidden bg-gray-100">
                 <img
                   src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute top-3 left-3">
+                  <Badge variant="teal">{item.category}</Badge>
+                </div>
               </div>
 
               {/* Card Body */}
-              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-teal-600 transition-colors">
+                  <h3 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-teal-600 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
-                    {item.description}
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                    {item.shortDescription}
                   </p>
                 </div>
 
-                <Link
-                  to={item.link}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-600 hover:text-teal-700 group-hover:translate-x-1 transition-transform"
-                >
-                  <span>Read More</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                {/* Progress Bar */}
+                <div className="space-y-2 pt-2 border-t border-gray-100">
+                  <div className="flex justify-between text-xs font-semibold text-gray-700">
+                    <span className="text-teal-600">₹{item.raisedAmount.toLocaleString('en-IN')}</span>
+                    <span className="text-gray-500">Goal: ₹{item.goalAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full"
+                      style={{ width: `${item.progressPercent}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center text-xs text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3 text-teal-500" />
+                      {item.donorsCount} Donors
+                    </span>
+                    <span className="font-bold text-teal-600">{item.progressPercent}%</span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="pt-2 flex items-center justify-between gap-2">
+                  <Link to={`/campaigns/${item.slug}`} className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full text-xs">
+                      Details
+                    </Button>
+                  </Link>
+                  <Link to={`/donate?campaign=${item.slug}`} className="flex-1">
+                    <Button variant="primary" size="sm" className="w-full text-xs">
+                      <Heart className="w-3.5 h-3.5 mr-1 fill-current" />
+                      Donate
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
@@ -98,3 +110,5 @@ export const CampaignsSection: React.FC = () => {
     </section>
   );
 };
+
+export default CampaignsSection;
