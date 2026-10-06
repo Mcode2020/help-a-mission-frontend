@@ -6,10 +6,10 @@ import type {
   ContactFormData,
 } from '../types';
 
-import campaignBlood from '../assets/campaign_blood.jpg';
-import campaignFinancial from '../assets/campaign_financial.jpg';
-import campaignEducation from '../assets/campaign_education.jpg';
-import campaignCommunity from '../assets/campaign_community.jpg';
+import campaignBlood from '../assets/campaign_blood.png';
+import campaignFinancial from '../assets/campaign_financial.png';
+import campaignEducation from '../assets/campaign_education.png';
+import campaignCommunity from '../assets/campaign_community.png';
 
 const API_BASE = '/api';
 

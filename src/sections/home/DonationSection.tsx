@@ -6,7 +6,6 @@ import { Button } from '../../components/ui';
 export const DonationSection: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(1000);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -14,8 +13,7 @@ export const DonationSection: React.FC = () => {
     phone: '',
     message: '',
   });
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [receipt, setReceipt] = useState<DonationReceipt | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const predefinedAmounts = [
     { label: '₹500', value: 500 },
@@ -162,6 +160,7 @@ export const DonationSection: React.FC = () => {
                       className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-[#FAFAFA]/70 text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F9EA2]/20 focus:border-[#0F9EA2] transition-all"
                     />
                   </div>
+                )}
 
                 {/* Full Name & Email Address Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
@@ -194,6 +193,7 @@ export const DonationSection: React.FC = () => {
                       className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-[#FAFAFA]/70 text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F9EA2]/20 focus:border-[#0F9EA2] transition-all"
                     />
                   </div>
+                </div>
 
                 {/* Phone Number Field */}
                 <div>
@@ -256,9 +256,9 @@ export const DonationSection: React.FC = () => {
                   <div className="mt-3 p-3 bg-teal-50 border border-teal-200 text-[#0F9EA2] text-xs sm:text-sm font-semibold rounded-xl text-center">
                     Thank you for your pledge! We will get in touch with you shortly.
                   </div>
-                </form>
-              )}
-            </Card>
+                )}
+              </form>
+            </div>
           </div>
 
         </div>

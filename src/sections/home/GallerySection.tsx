@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
+import { Button, Modal } from '../../components/ui';
 
 import gallery1 from '../../assets/gallery-1.png';
 import gallery2 from '../../assets/gallery-2.png';
 import campaignFinancial from '../../assets/campaign_financial.png';
 
 export const GallerySection: React.FC = () => {
+  const [selectedPhoto, setSelectedPhoto] = useState<{ id: number; img: string; title: string } | null>(null);
+
   // 9 Gallery photos matching exact 3x3 grid UI design
   const galleryPhotos = [
     { id: 1, img: gallery1, title: 'Welfare Cheque Distribution' },
@@ -60,9 +62,10 @@ export const GallerySection: React.FC = () => {
         {/* 3x3 Photo Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryPhotos.map((photo) => (
-            <Card
+            <div
               key={photo.id}
-              className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-slate-100"
+              onClick={() => setSelectedPhoto(photo)}
+              className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-slate-100 cursor-pointer"
             >
               <img
                 src={photo.img}
@@ -75,7 +78,7 @@ export const GallerySection: React.FC = () => {
                   {photo.title}
                 </p>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

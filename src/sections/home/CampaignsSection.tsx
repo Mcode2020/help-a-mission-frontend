@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { Badge } from '../../components/ui';
 
 import campaignBlood from '../../assets/campaign_blood.png';
 import campaignFinancial from '../../assets/campaign_financial.png';
@@ -13,24 +14,28 @@ export const CampaignsSection: React.FC = () => {
       image: campaignBlood,
       title: 'Blood Donation Camps',
       description: 'Organising blood donation camps to help save lives and support hospitals.',
+      category: 'Health',
       link: '/campaigns',
     },
     {
       image: campaignFinancial,
       title: 'Health Awareness Programs',
       description: 'Conducting awareness sessions on health, hygiene and wellness.',
+      category: 'Wellness',
       link: '/campaigns',
     },
     {
       image: campaignEducation,
       title: 'Support for Needy Individuals',
       description: 'Helping individuals and families in need with essential support and guidance.',
+      category: 'Support',
       link: '/campaigns',
     },
     {
       image: campaignCommunity,
       title: 'Community Development',
       description: 'Working towards stronger and healthier communities through social welfare.',
+      category: 'Community',
       link: '/campaigns',
     },
   ];
@@ -98,7 +103,7 @@ export const CampaignsSection: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
