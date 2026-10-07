@@ -43,11 +43,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Link
               key={item.name}
               to={item.path}
-              className={`text-base font-semibold transition-colors duration-200 ${
-                isActive
+              className={`text-base font-semibold transition-colors duration-200 ${isActive
                   ? 'text-[#08A49C]'
                   : 'text-[#4B5563] hover:text-[#08A49C]'
-              }`}
+                }`}
             >
               {item.name}
             </Link>

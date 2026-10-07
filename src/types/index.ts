@@ -51,3 +51,6 @@ export interface ContactFormData {
   subject: string;
   message: string;
 }
+
+export * from './cms';
+

@@ -4,6 +4,7 @@ import type {
   DonationReceipt,
   VolunteerFormData,
   ContactFormData,
+  CmsPageResponse,
 } from '../types';
 
 import campaignBlood from '../assets/campaign_blood.png';
@@ -223,6 +224,18 @@ export const api = {
         success: true,
         message: 'Thank you for reaching out! We have received your inquiry.',
       };
+    }
+  },
+
+  // Fetch Public CMS Page
+  async getCmsPage(slug = 'home'): Promise<CmsPageResponse | null> {
+    try {
+      const res = await fetch(`${API_BASE}/v1/public/${slug}`);
+      if (!res.ok) throw new Error('Failed to load CMS data');
+      const data = await res.json();
+      return data.data;
+    } catch {
+      return null;
     }
   },
 };
