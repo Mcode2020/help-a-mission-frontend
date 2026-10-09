@@ -4,6 +4,7 @@
     "about": "About Us",
     "ourWork": "Our Work",
     "campaigns": "Campaigns",
+    "members": "Members",
     "contact": "Contact",
     "donateNow": "Donate Now",
     "login": "Sign In",
@@ -57,5 +58,26 @@
     "quickLinks": "Quick Links",
     "contactUs": "Contact Us",
     "rights": "All rights reserved."
+  },
+  "members": {
+    "title": "Our Leadership & Society Members",
+    "subtitle": "Meet the passionate officers, executive members, and community leaders who dedicate their time, energy, and vision to social welfare, blood donation drives, and educational empowerment across Haryana.",
+    "registeredBadge": "Registered Society Committee • Regd. No. 01667",
+    "activeMembers": "Active Members",
+    "voluntaryService": "Voluntary Service",
+    "yearsImpact": "Years of Impact",
+    "directoryTitle": "Society Directory",
+    "showingCount": "Showing {{count}} published members",
+    "searchPlaceholder": "Search member name or title...",
+    "noMembersFound": "No Members Found",
+    "noMembersDesc": "No members match search term or directory is empty.",
+    "errorTitle": "Unable to Load Members",
+    "errorDesc": "There was an error loading society members from the backend server. Please check your connection and try again.",
+    "tryAgain": "Try Again",
+    "verifiedMember": "Verified NGO Committee Member",
+    "joinTitle": "Want to Join Help-A-Mission as a Member or Volunteer?",
+    "joinDesc": "We welcome individuals passionate about community service, health camps, and education. Together we can create lasting social impact.",
+    "contactSociety": "Contact Society",
+    "donateNow": "Donate Now"
   }
 }

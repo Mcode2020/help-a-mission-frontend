@@ -17,6 +17,7 @@ import type {
   LoginPayload,
   SignUpPayload,
   AuthUser,
+  Member,
 } from '../types';
 
 import campaignBlood from '../assets/campaign_blood.png';
@@ -145,9 +146,110 @@ export const FALLBACK_CAMPAIGNS: Campaign[] = [
   },
 ];
 
+export const FALLBACK_MEMBERS: Member[] = [
+  {
+    id: 'mem-1',
+    name: 'Dr. Ramesh Kumar',
+    title: 'Founder & President',
+    email: 'president@helpamission.org',
+    phone: '+91 98120 12345',
+    description: 'Leading Help A Mission Welfare Society since inception. Dedicated social activist committed to healthcare accessibility, blood donation drives, and community welfare in Jind.',
+    status: 'published',
+    sort_order: 1,
+  },
+  {
+    id: 'mem-2',
+    name: 'Sunita Sharma',
+    title: 'Vice President & Women Welfare Lead',
+    email: 'sunita.sharma@helpamission.org',
+    phone: '+91 98120 23456',
+    description: 'Overseeing women empowerment programs, vocational training workshops, and emergency relief distribution for underprivileged families across Haryana.',
+    status: 'published',
+    sort_order: 2,
+  },
+  {
+    id: 'mem-3',
+    name: 'Vikram Singh',
+    title: 'General Secretary',
+    email: 'vikram.singh@helpamission.org',
+    phone: '+91 98120 34567',
+    description: 'Managing organizational operations, inter-agency partnerships, and annual blood donation camp logistics with Red Cross Society.',
+    status: 'published',
+    sort_order: 3,
+  },
+  {
+    id: 'mem-4',
+    name: 'Pooja Rani',
+    title: 'Treasurer & Finance Director',
+    email: 'finance@helpamission.org',
+    phone: '+91 98120 45678',
+    description: 'Ensuring total financial transparency, auditing donor contributions, and managing 80G tax exemption compliance.',
+    status: 'published',
+    sort_order: 4,
+  },
+  {
+    id: 'mem-5',
+    name: 'Rajiv Malhotra',
+    title: 'Youth & Education Coordinator',
+    email: 'youth@helpamission.org',
+    phone: '+91 98120 56789',
+    description: 'Directing remedial education classes, school kit distributions, and youth volunteer mobilization drives.',
+    status: 'published',
+    sort_order: 5,
+  },
+];
+
 export const publicApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // Fetch Published Members
+    getMembers: builder.query<Member[], { language?: PublicLanguage } | void>({
+      async queryFn(arg, _queryApi, _extraOptions, fetchWithBQ) {
+        const language = arg?.language || 'en';
+        try {
+          const response = await fetchWithBQ({
+            url: `/v1/public/members?language=${language}`,
+            headers: {
+              'Accept-Language': language,
+            },
+          });
+
+          if (response.error || !response.data) {
+            return {
+              error: response.error || {
+                status: 500,
+                data: 'Failed to load published members',
+              },
+            };
+          }
+
+          const json = response.data as { data: Member[] };
+          if (!Array.isArray(json?.data)) {
+            return {
+              error: {
+                status: 500,
+                data: 'Invalid response format from members endpoint',
+              },
+            };
+          }
+
+          return { data: json.data };
+        } catch (err: unknown) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: err instanceof Error ? err.message : 'Failed to fetch members list',
+            },
+          };
+        }
+      },
+      providesTags: (_result, _error, arg) => [
+        { type: 'CMS', id: `MEMBERS-${arg?.language || 'en'}` },
+        { type: 'CMS', id: 'MEMBERS' },
+      ],
+    }),
+
     // Fetch CMS Page with language-aware caching
+
     getCmsPage: builder.query<ParsedCmsSections, GetCmsPageArg | void>({
       async queryFn(arg, _queryApi, _extraOptions, fetchWithBQ) {
         const slug = arg?.slug || 'home';
@@ -540,6 +642,7 @@ export const publicApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetMembersQuery,
   useGetCmsPageQuery,
   useGetCampaignsQuery,
   useGetCampaignBySlugQuery,
@@ -552,4 +655,5 @@ export const {
   useLogoutUserMutation,
   useGetMeUserQuery,
 } = publicApi;
+
 

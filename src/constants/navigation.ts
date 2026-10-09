@@ -9,5 +9,7 @@ export const navItems: NavItem[] = [
   { name: 'About Us', key: 'about', path: '/about' },
   { name: 'Our Work', key: 'ourWork', path: '/our-work' },
   { name: 'Campaigns', key: 'campaigns', path: '/campaigns' },
+  { name: 'Members', key: 'members', path: '/members' },
   { name: 'Contact', key: 'contact', path: '/contact' },
 ];
+

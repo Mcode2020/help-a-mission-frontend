@@ -86,5 +86,21 @@ export interface AuthResponse {
 }
 
 
+export interface Member {
+  id: string;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  title: string;
+  description?: string | null;
+  image_url?: string | null;
+  imageUrl?: string | null;
+  image?: string | null;
+  status: 'published' | 'draft';
+  sort_order?: number;
+  created_at?: string;
+}
+
 export * from './cms';
+
 

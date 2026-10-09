@@ -8,6 +8,7 @@ import Donate from '../pages/Donate/Donate';
 import Contact from '../pages/Contact/Contact';
 import Login from '../pages/Auth/Login';
 import SignUp from '../pages/Auth/SignUp';
+import MembersPage from '../pages/Members/MembersPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="about" element={<About />} />
         <Route path="our-work" element={<OurWork />} />
         <Route path="campaigns" element={<Campaigns />} />
+        <Route path="members" element={<MembersPage />} />
         <Route path="donate" element={<Donate />} />
         <Route path="contact" element={<Contact />} />
         <Route path="login" element={<Login />} />
@@ -31,6 +33,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/about" element={<Navigate to="/en/about" replace />} />
       <Route path="/our-work" element={<Navigate to="/en/our-work" replace />} />
       <Route path="/campaigns" element={<Navigate to="/en/campaigns" replace />} />
+      <Route path="/members" element={<Navigate to="/en/members" replace />} />
       <Route path="/donate" element={<Navigate to="/en/donate" replace />} />
       <Route path="/contact" element={<Navigate to="/en/contact" replace />} />
       <Route path="/login" element={<Navigate to="/en/login" replace />} />
@@ -41,5 +44,6 @@ export const AppRoutes: React.FC = () => {
     </Routes>
   );
 };
+
 
 export default AppRoutes;
