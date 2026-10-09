@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X, Globe } from 'lucide-react';
 import { navItems } from '../../constants/navigation';
 import logoImg from '../../assets/logo.png';
 import { Button } from '../ui';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface MobileMenuProps {
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   // Close menu on route change
   useEffect(() => {
@@ -74,20 +76,51 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
+        {/* Language Switcher row */}
+        <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-600">
+            <Globe className="w-4 h-4 text-teal-600" />
+            <span>Language / भाषा</span>
+          </div>
+          <div className="flex items-center gap-1 bg-gray-200 p-0.5 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${language === 'en' ? 'bg-teal-600 text-white shadow-xs' : 'text-gray-700'
+                }`}
+            >
+              English
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('hi')}
+              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${language === 'hi' ? 'bg-teal-600 text-white shadow-xs' : 'text-gray-700'
+                }`}
+            >
+              हिंदी
+            </button>
+          </div>
+        </div>
+
         {/* Links */}
         <div className="flex-1 px-4 py-6 space-y-1">
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+            const itemLocalizedPath = `/${language}${item.path === '/' ? '' : item.path}`;
+            const isActive =
+              location.pathname === itemLocalizedPath ||
+              (item.path !== '/' && location.pathname.startsWith(`/${language}${item.path}`));
+            const label = item.key ? t(`nav.${item.key}`, item.name) : item.name;
+
             return (
               <Link
                 key={item.name}
-                to={item.path}
+                to={itemLocalizedPath}
                 className={`flex items-center px-4 py-3 rounded-xl font-medium text-base transition-all ${isActive
                   ? 'text-[#08A49C] bg-[#08A49C]/10 font-semibold border-l-4 border-[#08A49C]'
                   : 'text-[#4B5563] hover:text-[#08A49C] hover:bg-gray-50'
                   }`}
               >
-                {item.name}
+                {label}
               </Link>
             );
           })}
@@ -95,9 +128,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
         {/* Mobile Action & Contact Info */}
         <div className="p-4 border-t border-gray-100 bg-slate-50 space-y-4">
-          <Link to="/donate" className="w-full block">
+          <Link to={`/${language}/donate`} className="w-full block">
             <Button variant="primary" className="w-full py-3 rounded-full font-semibold">
-              Donate Now
+              {t('nav.donateNow', 'Donate Now')}
             </Button>
           </Link>
         </div>

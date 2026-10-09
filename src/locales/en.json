@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "ourWork": "Our Work",
+    "campaigns": "Campaigns",
+    "contact": "Contact",
+    "donateNow": "Donate Now"
+  },
+  "common": {
+    "readMore": "Read More",
+    "learnMore": "Learn More",
+    "submit": "Submit",
+    "close": "Close",
+    "loading": "Loading...",
+    "next": "Next",
+    "previous": "Previous",
+    "donateNow": "Donate Now",
+    "viewAll": "View All",
+    "urgentDrive": "Urgent Drive",
+    "goal": "Goal",
+    "raised": "Raised",
+    "donors": "Donors",
+    "category": "Category",
+    "share": "Share",
+    "success": "Success",
+    "error": "Error"
+  },
+  "footer": {
+    "aboutTitle": "Help A Mission Welfare Society",
+    "aboutDesc": "Registered under Haryana Registration and Regulation of Societies Act 2012 (Regd. No. 01667). Dedicated to social welfare, blood donation camps, and educational support.",
+    "quickLinks": "Quick Links",
+    "contactUs": "Contact Us",
+    "rights": "All rights reserved."
+  }
+}

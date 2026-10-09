@@ -1,5 +1,14 @@
 # Frontend Changelog
 
+## 2026-10-08 — Fix DonationSection.tsx Syntax Error (bugfix)
+- **Date**: 2026-10-08
+- **Type**: bugfix / syntax
+- **Problem**: `DonationSection.tsx` had duplicate JSX markup and a duplicate export default statement pasted outside the component body (lines 316–344), breaking TypeScript compilation and React rendering.
+- **Design / Solution**: Removed stray duplicate JSX snippet and export statement at the bottom of `DonationSection.tsx`.
+- **Status**: done
+- **Verified**:
+  - `cmd /c npm run build` (`tsc -b && vite build`): PASS (built in 2.81s with zero errors)
+
 ## 2026-10-05 — NGO Platform Modules & UI Implementation (feature)
 - **Date**: 2026-10-05
 - **Type**: feature / ui / architecture

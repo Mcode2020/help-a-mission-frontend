@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Card, Badge, Button, Input, Select } from '../../components/ui';
 import { Heart, ShieldCheck, CheckCircle2, Download, Receipt } from 'lucide-react';
-import { api, loadRazorpayScript } from '../../services/api';
+import {
+  useCreateDonationOrderMutation,
+  useVerifyDonationPaymentMutation,
+  loadRazorpayScript,
+} from '../../services/publicApi';
 import type { DonationReceipt } from '../../types';
 
 export const DonatePage: React.FC = () => {
@@ -16,6 +20,9 @@ export const DonatePage: React.FC = () => {
   const [pan, setPan] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [receipt, setReceipt] = useState<DonationReceipt | null>(null);
+
+  const [createDonationOrder] = useCreateDonationOrderMutation();
+  const [verifyDonationPayment] = useVerifyDonationPaymentMutation();
 
   const causes = [
     { value: 'general', label: 'Where Needed Most (General Welfare Fund)' },
@@ -41,7 +48,7 @@ export const DonatePage: React.FC = () => {
 
     try {
       await loadRazorpayScript();
-      const orderData = await api.createDonationOrder({
+      const orderData = await createDonationOrder({
         amount: finalAmount,
         donorName,
         email,
@@ -49,15 +56,15 @@ export const DonatePage: React.FC = () => {
         pan,
         frequency,
         campaignId: selectedCause,
-      });
+      }).unwrap();
 
       // Verify payment flow
-      const receiptRes = await api.verifyDonationPayment({
+      const receiptRes = await verifyDonationPayment({
         donationId: orderData.donationId,
         orderId: orderData.orderId,
         paymentId: `pay_rzp_${Date.now()}`,
         signature: `sim_sig_${orderData.orderId}_pay_rzp_${Date.now()}`,
-      });
+      }).unwrap();
 
       setReceipt(receiptRes);
     } catch (err: unknown) {

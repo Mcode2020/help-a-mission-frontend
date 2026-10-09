@@ -1,14 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Card, Badge, Button, Input } from '../../components/ui';
 import { Heart, ArrowLeft, Users, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { api, loadRazorpayScript } from '../../services/api';
-import type { Campaign, DonationReceipt } from '../../types';
+import { useLanguage } from '../../context/LanguageContext';
+import {
+  useGetCampaignBySlugQuery,
+  useCreateDonationOrderMutation,
+  useVerifyDonationPaymentMutation,
+  loadRazorpayScript,
+} from '../../services/publicApi';
+import type { DonationReceipt } from '../../types';
 
 export const CampaignDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
+
+  const { data: campaign = null, isLoading: loading } = useGetCampaignBySlugQuery(
+    { slug: slug || '', language },
+    { skip: !slug }
+  );
+
+  const [createDonationOrder] = useCreateDonationOrderMutation();
+  const [verifyDonationPayment] = useVerifyDonationPaymentMutation();
 
   // Donation form state
   const [amount, setAmount] = useState<number>(1000);
@@ -19,15 +32,6 @@ export const CampaignDetailPage: React.FC = () => {
   const [pan, setPan] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [receipt, setReceipt] = useState<DonationReceipt | null>(null);
-
-  useEffect(() => {
-    if (slug) {
-      api.getCampaignBySlug(slug).then((res) => {
-        setCampaign(res);
-        setLoading(false);
-      });
-    }
-  }, [slug]);
 
   const handleDonate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +49,7 @@ export const CampaignDetailPage: React.FC = () => {
 
     try {
       await loadRazorpayScript();
-      const orderData = await api.createDonationOrder({
+      const orderData = await createDonationOrder({
         amount: finalAmount,
         donorName,
         email,
@@ -53,15 +57,15 @@ export const CampaignDetailPage: React.FC = () => {
         pan,
         frequency: 'once',
         campaignId: campaign?.slug || 'general',
-      });
+      }).unwrap();
 
       // Verify payment flow
-      const receiptRes = await api.verifyDonationPayment({
+      const receiptRes = await verifyDonationPayment({
         donationId: orderData.donationId,
         orderId: orderData.orderId,
         paymentId: `pay_rzp_${Date.now()}`,
         signature: `sim_sig_${orderData.orderId}_pay_rzp_${Date.now()}`,
-      });
+      }).unwrap();
 
       setReceipt(receiptRes);
     } catch (err: unknown) {

@@ -7,7 +7,9 @@
 }
 
 @layer base {
-  html, body {
+
+  html,
+  body {
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     font-optical-sizing: auto;
   }
@@ -18,4 +20,4 @@
 .dm-sans {
   font-family: 'DM Sans', sans-serif;
   font-optical-sizing: auto;
-}
+}
