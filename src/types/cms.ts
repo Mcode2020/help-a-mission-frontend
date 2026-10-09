@@ -123,6 +123,10 @@ export interface CmsDonationSectionContent {
   suggestedAmountsINR?: number[];
   defaultAmountINR?: number;
   customAmountEnabled?: boolean;
+  customAmountButtonLabel?: string;
+  customAmountInputLabel?: string;
+  customAmountPlaceholder?: string;
+  customAmountRequired?: boolean;
   donateButtonLabel?: string;
   showFullName?: boolean;
   showEmail?: boolean;
@@ -158,7 +162,7 @@ export interface CmsSectionData {
   section_key: string;
   section_type: string;
   sort_order?: number;
-  content_json: any;
+  content_json: string | Record<string, unknown>;
 }
 
 export interface CmsPageResponse {

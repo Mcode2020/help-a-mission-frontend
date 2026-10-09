@@ -6,8 +6,11 @@ import facebookIcon from '../../assets/facebook.png';
 import twitterIcon from '../../assets/twitter.png';
 import instagramIcon from '../../assets/instagram.png';
 import linkedinIcon from '../../assets/linkedin.png';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const Footer: React.FC = () => {
+  const { language, t } = useLanguage();
+
   return (
     <footer className="bg-black text-gray-400 pt-12 sm:pt-16 pb-8 border-t border-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +28,7 @@ export const Footer: React.FC = () => {
               />
               <div>
                 <h3 className="font-bold text-white text-base sm:text-lg tracking-wider uppercase leading-tight">
-                  HELP-A MISSION
+                  {t('footer.aboutTitle', 'HELP-A MISSION')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 font-medium leading-tight">
                   Welfare Society
@@ -35,13 +38,13 @@ export const Footer: React.FC = () => {
 
             {/* Description Paragraph */}
             <p className="text-xs sm:text-sm text-gray-400 max-w-lg leading-relaxed">
-              Help-A Mission Welfare Society is a registered non-profit organization dedicated to community medical aid, health wellness, and social upliftment.
+              {t('footer.aboutDesc', 'Help-A Mission Welfare Society is a registered non-profit organization dedicated to community medical aid, health wellness, and social upliftment.')}
             </p>
 
             {/* Get in Touch Section */}
             <div className="pt-1">
               <h4 className="text-white text-sm sm:text-base font-semibold mb-3">
-                Get in Touch
+                {t('footer.contactUs', 'Get in Touch')}
               </h4>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs sm:text-sm">
                 {/* Email */}
@@ -68,32 +71,32 @@ export const Footer: React.FC = () => {
           {/* Column 2: Quick Links */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-white text-sm sm:text-base font-semibold tracking-wide">
-              Quick Links
+              {t('footer.quickLinks', 'Quick Links')}
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm">
               <li>
-                <Link to="/" className="hover:text-white transition-colors">
-                  Home
+                <Link to={`/${language}/`} className="hover:text-white transition-colors">
+                  {t('nav.home', 'Home')}
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="hover:text-white transition-colors">
-                  About Us
+                <Link to={`/${language}/about`} className="hover:text-white transition-colors">
+                  {t('nav.about', 'About Us')}
                 </Link>
               </li>
               <li>
-                <Link to="/our-work" className="hover:text-white transition-colors">
-                  Our Work
+                <Link to={`/${language}/our-work`} className="hover:text-white transition-colors">
+                  {t('nav.ourWork', 'Our Work')}
                 </Link>
               </li>
               <li>
-                <Link to="/campaigns" className="hover:text-white transition-colors">
-                  Latest News
+                <Link to={`/${language}/campaigns`} className="hover:text-white transition-colors">
+                  {t('nav.campaigns', 'Campaigns')}
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-white transition-colors">
-                  Contact
+                <Link to={`/${language}/contact`} className="hover:text-white transition-colors">
+                  {t('nav.contact', 'Contact')}
                 </Link>
               </li>
             </ul>
@@ -106,22 +109,22 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm">
               <li>
-                <Link to="/campaigns" className="hover:text-white transition-colors">
+                <Link to={`/${language}/campaigns`} className="hover:text-white transition-colors">
                   Blood Donations
                 </Link>
               </li>
               <li>
-                <Link to="/campaigns" className="hover:text-white transition-colors">
+                <Link to={`/${language}/campaigns`} className="hover:text-white transition-colors">
                   Health Camps
                 </Link>
               </li>
               <li>
-                <Link to="/campaigns" className="hover:text-white transition-colors">
+                <Link to={`/${language}/campaigns`} className="hover:text-white transition-colors">
                   Support Needy
                 </Link>
               </li>
               <li>
-                <Link to="/campaigns" className="hover:text-white transition-colors">
+                <Link to={`/${language}/campaigns`} className="hover:text-white transition-colors">
                   Social Development
                 </Link>
               </li>
@@ -135,7 +138,7 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-gray-400 gap-4">
             {/* Copyright Text */}
             <p>
-              © 2026 Help-A Mission Welfare Society. All Rights Reserved.
+              © 2026 Help-A Mission Welfare Society. {t('footer.rights', 'All Rights Reserved.')}
             </p>
 
             {/* Social Media Icons */}
@@ -201,5 +204,3 @@ export const Footer: React.FC = () => {
 };
 
 export default Footer;
-
-

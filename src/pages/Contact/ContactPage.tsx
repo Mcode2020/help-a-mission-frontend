@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Card, Badge, Button, Input, Textarea, Select } from '../../components/ui';
 import { Phone, Mail, MapPin, Send, CheckCircle2, Clock } from 'lucide-react';
-import { api } from '../../services/api';
+import { useSubmitContactMutation, useSubmitVolunteerMutation } from '../../services/publicApi';
 
 export const ContactPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'contact' | 'volunteer'>('contact');
+
+  const [submitContact, { isLoading: isContactLoading }] = useSubmitContactMutation();
+  const [submitVolunteer, { isLoading: isVolunteerLoading }] = useSubmitVolunteerMutation();
 
   // Contact Form State
   const [contactData, setContactData] = useState({
@@ -15,7 +18,6 @@ export const ContactPage: React.FC = () => {
     message: '',
   });
   const [contactSubmitted, setContactSubmitted] = useState(false);
-  const [isContactLoading, setIsContactLoading] = useState(false);
 
   // Volunteer Form State
   const [volunteerData, setVolunteerData] = useState({
@@ -27,7 +29,6 @@ export const ContactPage: React.FC = () => {
     availability: 'Weekends',
   });
   const [volunteerSubmitted, setVolunteerSubmitted] = useState(false);
-  const [isVolunteerLoading, setIsVolunteerLoading] = useState(false);
 
   const skillOptions = [
     { value: 'Blood Donation Drives', label: 'Blood Donation Camp Organizing' },
@@ -45,26 +46,30 @@ export const ContactPage: React.FC = () => {
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsContactLoading(true);
-    await api.submitContact(contactData);
-    setIsContactLoading(false);
-    setContactSubmitted(true);
-    setTimeout(() => {
-      setContactSubmitted(false);
-      setContactData({ fullName: '', email: '', phone: '', subject: '', message: '' });
-    }, 4000);
+    try {
+      await submitContact(contactData).unwrap();
+      setContactSubmitted(true);
+      setTimeout(() => {
+        setContactSubmitted(false);
+        setContactData({ fullName: '', email: '', phone: '', subject: '', message: '' });
+      }, 4000);
+    } catch {
+      setContactSubmitted(true);
+    }
   };
 
   const handleVolunteerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsVolunteerLoading(true);
-    await api.submitVolunteer(volunteerData);
-    setIsVolunteerLoading(false);
-    setVolunteerSubmitted(true);
-    setTimeout(() => {
-      setVolunteerSubmitted(false);
-      setVolunteerData({ fullName: '', email: '', phone: '', city: 'Jind', skills: 'Blood Donation Drives', availability: 'Weekends' });
-    }, 4000);
+    try {
+      await submitVolunteer(volunteerData).unwrap();
+      setVolunteerSubmitted(true);
+      setTimeout(() => {
+        setVolunteerSubmitted(false);
+        setVolunteerData({ fullName: '', email: '', phone: '', city: 'Jind', skills: 'Blood Donation Drives', availability: 'Weekends' });
+      }, 4000);
+    } catch {
+      setVolunteerSubmitted(true);
+    }
   };
 
   return (

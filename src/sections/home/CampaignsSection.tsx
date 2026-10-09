@@ -74,10 +74,10 @@ export const CampaignsSection: React.FC<CampaignsSectionProps> = ({ data }) => {
 
                   <div>
                     <Link
-                      to={item.linkUrl || '/campaigns'}
+                      to={item.linkUrl || '#'}
                       className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#08A49C] hover:text-[#068079] group/link transition-colors"
                     >
-                      <span>{item.category || 'Learn More'}</span>
+                      <span>{item.category}</span>
                       <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                   </div>

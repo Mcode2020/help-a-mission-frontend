@@ -1,12 +1,13 @@
 export interface NavItem {
   name: string;
+  key: string;
   path: string;
 }
 
 export const navItems: NavItem[] = [
-  { name: 'Home', path: '/' },
-  { name: 'About Us', path: '/about' },
-  { name: 'Our Work', path: '/our-work' },
-  { name: 'Campaigns', path: '/campaigns' },
-  { name: 'Contact', path: '/contact' },
+  { name: 'Home', key: 'home', path: '/' },
+  { name: 'About Us', key: 'about', path: '/about' },
+  { name: 'Our Work', key: 'ourWork', path: '/our-work' },
+  { name: 'Campaigns', key: 'campaigns', path: '/campaigns' },
+  { name: 'Contact', key: 'contact', path: '/contact' },
 ];

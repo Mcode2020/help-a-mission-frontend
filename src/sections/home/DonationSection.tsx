@@ -1,25 +1,41 @@
-import React, { useState } from 'react';
+/**
+ * @intent Render dynamic home donation section with fully configurable CMS data, custom fields, preset amounts, and badges.
+ */
+import React, { useState, useEffect } from 'react';
 import { Heart, Users, GraduationCap, Sparkles, ChevronDown } from 'lucide-react';
 import { Button } from '../../components/ui';
-import type { CmsDonationSectionContent } from '../../types';
+import type { CmsDonationSectionContent, CmsFormField } from '../../types';
 
 interface DonationSectionProps {
   data?: CmsDonationSectionContent;
 }
 
+const DEFAULT_FORM_FIELDS: CmsFormField[] = [
+  { id: 'f1', label: 'Full Name', type: 'text', placeholder: 'Enter your name', required: true },
+  { id: 'f2', label: 'Email Address', type: 'email', placeholder: 'Enter your email', required: true },
+  { id: 'f3', label: 'Phone Number', type: 'tel', placeholder: 'Enter your phone number', required: true },
+  { id: 'f4', label: 'Message', type: 'textarea', placeholder: 'Anything you would like us to know?', required: false },
+];
+
 export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
-  const defaultSelected = data?.defaultAmountINR || 1000;
+  // CHANGE add: Dynamic data extraction with fallback defaults
+  const suggestedAmounts = data?.suggestedAmountsINR || [500, 1000, 2000, 5000];
+  const defaultSelected = data?.defaultAmountINR ?? suggestedAmounts[0] ?? 2000;
+
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(defaultSelected);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
+  const [formData, setFormData] = useState<Record<string, string>>({
     countryCode: '+91',
-    phone: '',
-    message: '',
   });
   const [customFieldsData, setCustomFieldsData] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // CHANGE add: Sync selected amount if defaultAmountINR changes dynamically from CMS
+  useEffect(() => {
+    if (data?.defaultAmountINR !== undefined) {
+      setSelectedAmount(data.defaultAmountINR);
+    }
+  }, [data?.defaultAmountINR]);
 
   const handleCustomInputChange = (fieldId: string, value: string) => {
     setCustomFieldsData((prev) => ({ ...prev, [fieldId]: value }));
@@ -32,12 +48,16 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
   const cardSubtitle = data?.cardSubtitle;
   const featureImage = data?.featureMediaUrl;
   const donateButtonLabel = data?.donateButtonLabel || 'Donate';
-
-  const suggestedAmounts = data?.suggestedAmountsINR || [];
+  const customAmountInputLabel = data?.customAmountInputLabel || 'Enter Custom Amount (₹)';
+  const customAmountButtonLabel = data?.customAmountButtonLabel || 'Custom';
+  const customAmountPlaceholder = data?.customAmountPlaceholder || 'Enter Custom Amount (₹)';
+  const customAmountRequired = data?.customAmountRequired !== false;
 
   const predefinedAmounts = [
     ...suggestedAmounts.map((amt) => ({ label: `₹${amt.toLocaleString('en-IN')}`, value: amt })),
-    ...(data?.customAmountEnabled !== false ? [{ label: 'Custom', value: 'custom' as const }] : []),
+    ...(data?.customAmountEnabled !== false
+      ? [{ label: customAmountButtonLabel, value: 'custom' as const }]
+      : []),
   ];
 
   const getBadgeIcon = (iconName: string) => {
@@ -67,9 +87,10 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
   };
 
   const badges = data?.badges || [];
+  const fieldsToRender = data?.customFields && data.customFields.length > 0 ? data.customFields : DEFAULT_FORM_FIELDS;
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -186,24 +207,24 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
                 )}
 
                 {/* Custom Amount Input field if 'Custom' option is active */}
-                {selectedAmount === 'custom' && (
+                {selectedAmount === 'custom' && data?.customAmountEnabled !== false && (
                   <div>
                     <label className="block text-xs font-bold text-[#1B2B4A] mb-1.5">
-                      Enter Custom Amount (₹) <span className="text-red-500">*</span>
+                      {customAmountInputLabel} {customAmountRequired && <span className="text-red-500">*</span>}
                     </label>
                     <input
                       type="number"
                       value={customAmount}
                       onChange={(e) => setCustomAmount(e.target.value)}
-                      placeholder="Enter amount in ₹"
-                      required
+                      placeholder={customAmountPlaceholder}
+                      required={customAmountRequired}
                       className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-[#FAFAFA]/70 text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F9EA2]/20 focus:border-[#0F9EA2] transition-all"
                     />
                   </div>
                 )}
 
                 {/* Dynamic Form Fields (Driven 100% by CMS Configured Fields) */}
-                {(data?.customFields || []).map((field) => (
+                {fieldsToRender.map((field) => (
                   <div key={field.id}>
                     <label className="block text-xs font-bold text-[#1B2B4A] mb-1.5">
                       {field.label} {field.required ? <span className="text-red-500">*</span> : <span className="text-slate-400 font-normal">(Optional)</span>}
@@ -227,12 +248,12 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
                         <input
                           type="tel"
                           name={field.id}
-                          value={customFieldsData[field.id] || (formData as any)[field.id] || ''}
+                          value={customFieldsData[field.id] || formData[field.id] || ''}
                           onChange={(e) => {
                             handleInputChange(e);
                             handleCustomInputChange(field.id, e.target.value);
                           }}
-                          placeholder={field.placeholder || 'Enter your phone number'}
+                          placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
                           required={field.required}
                           className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-[#FAFAFA]/70 text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F9EA2]/20 focus:border-[#0F9EA2] transition-all"
                         />
@@ -240,9 +261,9 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
                     ) : field.type === 'textarea' ? (
                       <textarea
                         name={field.id}
-                        value={customFieldsData[field.id] || (formData as any)[field.id] || ''}
+                        value={customFieldsData[field.id] || formData[field.id] || ''}
                         onChange={(e) => {
-                          handleInputChange(e as any);
+                          handleInputChange(e);
                           handleCustomInputChange(field.id, e.target.value);
                         }}
                         placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
@@ -274,7 +295,7 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
                       <input
                         type={field.type || 'text'}
                         name={field.id}
-                        value={customFieldsData[field.id] || (formData as any)[field.id] || ''}
+                        value={customFieldsData[field.id] || formData[field.id] || ''}
                         onChange={(e) => {
                           handleInputChange(e);
                           handleCustomInputChange(field.id, e.target.value);
@@ -293,7 +314,12 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
                     type="submit"
                     className="w-full py-3.5 sm:py-4 px-6 bg-[#0F9EA2] hover:bg-[#0C8B8F] text-white font-bold text-base rounded-full shadow-md shadow-[#0F9EA2]/25"
                   >
-                    {donateButtonLabel}
+                    {donateButtonLabel}{' '}
+                    {selectedAmount !== 'custom' && typeof selectedAmount === 'number'
+                      ? `(₹${selectedAmount.toLocaleString('en-IN')})`
+                      : customAmount
+                        ? `(₹${Number(customAmount).toLocaleString('en-IN')})`
+                        : ''}
                   </Button>
                 </div>
 
@@ -313,3 +339,5 @@ export const DonationSection: React.FC<DonationSectionProps> = ({ data }) => {
 };
 
 export default DonationSection;
+
+

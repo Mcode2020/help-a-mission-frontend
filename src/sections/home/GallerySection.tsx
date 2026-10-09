@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button, Modal } from '../../components/ui';
 
-import gallery1 from '../../assets/gallery-1.png';
-import gallery2 from '../../assets/gallery-2.png';
-import campaignFinancial from '../../assets/campaign_financial.png';
 import type { CmsGallerySectionContent } from '../../types';
 
 interface GallerySectionProps {
@@ -19,22 +16,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ data }) => {
   const heading = data?.heading;
   const description = data?.description;
   const viewAllLabel = data?.viewAllLabel;
-
-  const assetMap: Record<string, string> = {
-    '/src/assets/gallery-1.png': gallery1,
-    '/src/assets/gallery-2.png': gallery2,
-    '/src/assets/campaign_financial.png': campaignFinancial,
-  };
-
-  const resolveImageUrl = (url?: string) => {
-    if (!url) return '';
-    if (assetMap[url]) return assetMap[url];
-    return url;
-  };
+  const viewAllUrl = data?.viewAllUrl || '/our-work';
 
   const galleryPhotos = (data?.images || []).map((item, idx) => ({
     id: item.id || String(idx + 1),
-    img: resolveImageUrl(item.url),
+    img: item.url || '',
     title: item.title || item.alt || '',
   }));
 
@@ -69,7 +55,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ data }) => {
 
           {viewAllLabel && (
             <div className="shrink-0">
-              <Link to={data?.viewAllUrl || '/our-work'}>
+              <Link to={viewAllUrl}>
                 <Button
                   variant="primary"
                   className="rounded-full font-semibold px-6 py-3 text-xs sm:text-sm"
@@ -88,19 +74,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ data }) => {
             <div
               key={photo.id}
               onClick={() => setSelectedPhoto(photo)}
-              className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-slate-100 cursor-pointer"
+              className="relative h-60 sm:h-64 md:h-72 rounded-[20px] overflow-hidden shadow-sm border border-slate-100 cursor-pointer"
             >
               <img
                 src={photo.img}
                 alt={photo.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover"
               />
-              {/* Subtle hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                <p className="text-white text-sm font-medium tracking-wide">
-                  {photo.title}
-                </p>
-              </div>
             </div>
           ))}
         </div>
@@ -136,3 +116,4 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ data }) => {
 };
 
 export default GallerySection;
+

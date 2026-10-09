@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Droplet, Heart, Users, Sprout, ShieldCheck, Activity, Award, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui';
 import type { CmsAboutSectionContent } from '../../types';
+
+import badgeIcon from '../../assets/fi_2956777.png';
+import dropletIcon from '../../assets/Droplet.png';
+import heartPulseIcon from '../../assets/HeartPulse.png';
+import usersIcon from '../../assets/Users.png';
+import sproutIcon from '../../assets/Sprout.png';
 
 interface AboutSectionProps {
   data?: CmsAboutSectionContent;
@@ -15,35 +21,37 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
   const experienceBadge = data?.experienceBadge;
   const mainImage = data?.mediaUrl;
 
-  const renderImpactIcon = (iconName?: string, mediaUrl?: string) => {
-    if (mediaUrl) {
-      return (
-        <img
-          src={mediaUrl}
-          alt={iconName || 'Impact icon'}
-          className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl shrink-0"
-        />
-      );
-    }
-    const iconClass = "w-7 h-7 sm:w-8 sm:h-8 text-[#08A49C]";
+  const renderImpactIcon = (iconName?: string, _mediaUrl?: string, index: number = 0) => {
+    let iconSrc: string;
     switch (iconName) {
       case 'Droplet':
-        return <Droplet className={iconClass} />;
+        iconSrc = dropletIcon;
+        break;
       case 'Heart':
-        return <Heart className={iconClass} />;
-      case 'Users':
-        return <Users className={iconClass} />;
-      case 'Sprout':
-        return <Sprout className={iconClass} />;
-      case 'ShieldCheck':
-        return <ShieldCheck className={iconClass} />;
+      case 'HeartPulse':
       case 'Activity':
-        return <Activity className={iconClass} />;
-      case 'Award':
-        return <Award className={iconClass} />;
-      default:
-        return <Sparkles className={iconClass} />;
+        iconSrc = heartPulseIcon;
+        break;
+      case 'Users':
+        iconSrc = usersIcon;
+        break;
+      case 'Sprout':
+        iconSrc = sproutIcon;
+        break;
+      default: {
+        const staticIcons = [dropletIcon, heartPulseIcon, usersIcon, sproutIcon];
+        iconSrc = staticIcons[index % staticIcons.length];
+        break;
+      }
     }
+
+    return (
+      <img
+        src={iconSrc}
+        alt={iconName || 'Impact icon'}
+        className="w-10 h-10 sm:w-12 sm:h-12 object-contain shrink-0"
+      />
+    );
   };
 
   return (
@@ -73,7 +81,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
                 <div className="rounded-[30px] overflow-hidden shadow-2xl border border-gray-100/80">
                   <img
                     src={mainImage}
-                    alt={heading || 'About Us'}
+                    alt={heading}
                     className="w-full h-[360px] sm:h-[420px] object-cover"
                   />
                 </div>
@@ -84,6 +92,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
                     className="absolute bottom-4 -right-4 sm:bottom-6 sm:-right-8 min-w-[220px] max-w-[270px] min-h-[72px] text-white p-4 rounded-[10px] shadow-xl flex items-center gap-3.5 border border-white/30 backdrop-blur-md z-20"
                     style={{ backgroundColor: 'rgba(8, 164, 156, 0.67)' }}
                   >
+                    <img
+                      src={badgeIcon}
+                      alt="Badge Icon"
+                      className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
+                    />
                     <div className="text-left">
                       <p className="text-xs sm:text-sm font-semibold text-white leading-snug">
                         {experienceBadge}
@@ -118,7 +131,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
 
             {data?.cta?.label && (
               <div className="pt-2">
-                <Link to={data.cta.url || "/about"}>
+                <Link to={data.cta.url}>
                   <Button
                     variant="primary"
                     size="lg"
@@ -142,8 +155,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
                 key={card.id || idx}
                 className="bg-[#F2F9F9] rounded-2xl p-6 sm:p-8 text-center flex flex-col items-center justify-center space-y-4 border border-[#E1F2F1] transition-shadow hover:shadow-md"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#08A49C]/10 flex items-center justify-center shrink-0">
-                  {renderImpactIcon(card.iconName, card.mediaUrl)}
+                <div className="flex items-center justify-center shrink-0">
+                  {renderImpactIcon(card.iconName, card.mediaUrl, idx)}
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug max-w-[180px]">
                   {card.title}
@@ -159,3 +172,4 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ data }) => {
 };
 
 export default AboutSection;
+

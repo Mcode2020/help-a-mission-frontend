@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Card, Badge, Button, Input } from '../../components/ui';
 import { Search, Heart, ArrowRight, Users, Sparkles } from 'lucide-react';
-import { api } from '../../services/api';
-import type { Campaign } from '../../types';
+import { useLanguage } from '../../context/LanguageContext';
+import { useGetCampaignsQuery } from '../../services/publicApi';
 
 export const CampaignsPage: React.FC = () => {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const { language } = useLanguage();
+  const { data: campaigns = [], isLoading: loading } = useGetCampaignsQuery({ language });
+
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    api.getCampaigns().then((data) => {
-      setCampaigns(data);
-      setLoading(false);
-    });
-  }, []);
 
   const categories = ['All', 'Healthcare', 'Social Welfare', 'Education', 'Community'];
 

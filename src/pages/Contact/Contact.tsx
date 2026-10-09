@@ -11,8 +11,12 @@ import {
   X
 } from 'lucide-react';
 import { FAQ_ITEMS } from '../../data/ngoData';
+import { useSubmitContactMutation, useSubmitVolunteerMutation } from '../../services/publicApi';
 
 export const Contact: React.FC = () => {
+  const [submitContact] = useSubmitContactMutation();
+  const [submitVolunteer] = useSubmitVolunteerMutation();
+
   // Contact Form state
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -33,13 +37,36 @@ export const Contact: React.FC = () => {
   // FAQ Accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await submitContact({
+        fullName: name,
+        email,
+        phone: '',
+        subject: subject || category,
+        message,
+      }).unwrap();
+    } catch {
+      // Fallback state
+    }
     setSubmitted(true);
   };
 
-  const handleVolunteerSubmit = (e: React.FormEvent) => {
+  const handleVolunteerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await submitVolunteer({
+        fullName: volName,
+        email: volEmail,
+        phone: volPhone,
+        city: 'Jind',
+        skills: volInterest,
+        availability: volAvailability,
+      }).unwrap();
+    } catch {
+      // Fallback state
+    }
     setVolSuccess(true);
   };
 
@@ -265,9 +292,8 @@ export const Contact: React.FC = () => {
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-teal-600 shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
+                    className={`w-5 h-5 text-teal-600 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                      }`}
                   />
                 </button>
 

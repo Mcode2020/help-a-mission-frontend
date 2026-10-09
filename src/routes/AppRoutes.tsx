@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/Home/Home';
 import About from '../pages/About/About';
 import Campaigns from '../pages/Campaigns/Campaigns';
@@ -10,12 +10,28 @@ import Contact from '../pages/Contact/Contact';
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/our-work" element={<OurWork />} />
-      <Route path="/campaigns" element={<Campaigns />} />
-      <Route path="/donate" element={<Donate />} />
-      <Route path="/contact" element={<Contact />} />
+      {/* Root redirect to default /en/ */}
+      <Route path="/" element={<Navigate to="/en/" replace />} />
+
+      {/* Language-aware routes */}
+      <Route path="/:lang">
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="our-work" element={<OurWork />} />
+        <Route path="campaigns" element={<Campaigns />} />
+        <Route path="donate" element={<Donate />} />
+        <Route path="contact" element={<Contact />} />
+      </Route>
+
+      {/* Non-prefixed route fallbacks */}
+      <Route path="/about" element={<Navigate to="/en/about" replace />} />
+      <Route path="/our-work" element={<Navigate to="/en/our-work" replace />} />
+      <Route path="/campaigns" element={<Navigate to="/en/campaigns" replace />} />
+      <Route path="/donate" element={<Navigate to="/en/donate" replace />} />
+      <Route path="/contact" element={<Navigate to="/en/contact" replace />} />
+
+      {/* Catch-all fallback */}
+      <Route path="*" element={<Navigate to="/en/" replace />} />
     </Routes>
   );
 };

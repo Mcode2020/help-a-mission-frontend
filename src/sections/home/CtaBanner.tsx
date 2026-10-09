@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import ctaBannerImg from '../../assets/ctaBanner.png';
 import type { CmsMissionCTASectionContent } from '../../types';
 
 interface CtaBannerProps {
@@ -13,9 +12,9 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ data }) => {
   const heading = data?.heading;
   const subheading = data?.subheading;
   const ctaLabel = data?.ctaLabel;
-  const ctaUrl = data?.ctaUrl || '/donate';
+  const ctaUrl = data?.ctaUrl;
 
-  const bgImg = data?.bannerMediaUrl || ctaBannerImg;
+  const bgImg = data?.bannerMediaUrl;
 
   return (
     <section className="py-8 sm:py-12 md:py-16 bg-white">
@@ -24,7 +23,7 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ data }) => {
           {/* Background Image */}
           <img
             src={bgImg}
-            alt={heading || 'Mission Banner'}
+            alt={heading}
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
 
@@ -56,7 +55,7 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ data }) => {
             {ctaLabel && (
               <div>
                 <Link
-                  to={ctaUrl}
+                  to={ctaUrl || '/donate'}
                   className="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 bg-white text-[#00A79D] hover:text-[#008980] rounded-full font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-200 group transform hover:-translate-y-0.5"
                 >
                   <span>{ctaLabel}</span>
