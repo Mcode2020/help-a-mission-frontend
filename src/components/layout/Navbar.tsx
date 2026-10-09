@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, User, LogOut } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 import { navItems } from '../../constants/navigation';
 import { Button } from '../ui';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
+import { useLogoutUserMutation } from '../../services/publicApi';
 
 interface NavbarProps {
   isMobileMenuOpen: boolean;
@@ -17,6 +19,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+    } catch {
+      // Ignore network errors on logout
+    } finally {
+      logout();
+    }
+  };
 
   return (
     <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
@@ -90,6 +104,35 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
+        {/* User Profile Badge / Sign In Link */}
+        {isAuthenticated && user ? (
+          <div className="hidden sm:flex items-center gap-2.5 bg-teal-50/90 dark:bg-slate-800/80 px-3 py-1.5 rounded-full border border-teal-200/80 dark:border-slate-700 shadow-xs">
+            <div className="w-6 h-6 rounded-full bg-[#08A49C] text-white flex items-center justify-center text-xs font-bold shrink-0">
+              {user.name ? user.name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
+            </div>
+            <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 max-w-[140px] truncate">
+              {user.name}
+            </span>
+            <button
+              onClick={handleLogout}
+              title="Sign Out"
+              className="ml-1 p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+              aria-label="Logout"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <Link to={`/${language}/login`} className="hidden sm:inline-block">
+            <Button
+              variant="outline"
+              className="rounded-full px-5 py-2 text-sm font-semibold border-teal-600 text-[#08A49C] hover:bg-teal-50"
+            >
+              {t('nav.login', 'Sign In')}
+            </Button>
+          </Link>
+        )}
+
         <Link to={`/${language}/donate`}>
           <Button
             variant="primary"
@@ -98,6 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {t('nav.donateNow', 'Donate Now')}
           </Button>
         </Link>
+
 
         {/* Mobile Hamburger Trigger */}
         <button

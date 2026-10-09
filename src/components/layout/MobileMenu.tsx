@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, Globe } from 'lucide-react';
+import { X, Globe, LogOut } from 'lucide-react';
 import { navItems } from '../../constants/navigation';
 import logoImg from '../../assets/logo.png';
 import { Button } from '../ui';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
+import { useLogoutUserMutation } from '../../services/publicApi';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -14,6 +16,19 @@ interface MobileMenuProps {
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+    } catch {
+      // Ignore network errors on logout
+    } finally {
+      logout();
+      onClose();
+    }
+  };
 
   // Close menu on route change
   useEffect(() => {
@@ -127,9 +142,35 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Mobile Action & Contact Info */}
-        <div className="p-4 border-t border-gray-100 bg-slate-50 space-y-4">
+        <div className="p-4 border-t border-gray-100 bg-slate-50 space-y-2.5">
+          {isAuthenticated && user ? (
+            <div className="p-3 bg-teal-50/80 rounded-2xl border border-teal-200/80 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-800 leading-tight">{user.name}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <Link to={`/${language}/login`} className="w-full block">
+              <Button variant="outline" className="w-full py-2.5 rounded-full font-semibold border-teal-600 text-[#08A49C]">
+                {t('nav.login', 'Sign In')}
+              </Button>
+            </Link>
+          )}
+
           <Link to={`/${language}/donate`} className="w-full block">
-            <Button variant="primary" className="w-full py-3 rounded-full font-semibold">
+            <Button variant="primary" className="w-full py-2.5 rounded-full font-semibold">
               {t('nav.donateNow', 'Donate Now')}
             </Button>
           </Link>
@@ -138,3 +179,4 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
+

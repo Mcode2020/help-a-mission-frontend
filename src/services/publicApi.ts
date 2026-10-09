@@ -13,6 +13,10 @@ import type {
   CmsMissionCTASectionContent,
   CmsSEOSectionContent,
   CmsPageResponse,
+  AuthResponse,
+  LoginPayload,
+  SignUpPayload,
+  AuthUser,
 } from '../types';
 
 import campaignBlood from '../assets/campaign_blood.png';
@@ -420,6 +424,118 @@ export const publicApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ['Contact'],
     }),
+
+    // User Login Mutation
+    loginUser: builder.mutation<AuthResponse, LoginPayload>({
+      async queryFn(payload, _queryApi, _extraOptions, fetchWithBQ) {
+        try {
+          const response = await fetchWithBQ({
+            url: `/v1/auth/login`,
+            method: 'POST',
+            body: payload,
+          });
+
+          if (response.error) {
+            const errData = response.error.data as { message?: string; error?: { message?: string } | string };
+            const errMsg =
+              typeof errData?.error === 'object' && errData?.error?.message
+                ? errData.error.message
+                : typeof errData?.error === 'string'
+                ? errData.error
+                : errData?.message || 'Login failed. Please check your credentials.';
+            throw new Error(errMsg);
+          }
+
+          const json = response.data as AuthResponse;
+          return { data: json };
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : 'Login failed. Please try again.';
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: message,
+            },
+          };
+        }
+      },
+      invalidatesTags: ['Auth'],
+    }),
+
+    // User SignUp Mutation
+    signUpUser: builder.mutation<AuthResponse, SignUpPayload>({
+      async queryFn(payload, _queryApi, _extraOptions, fetchWithBQ) {
+        try {
+          const response = await fetchWithBQ({
+            url: `/v1/auth/signup`,
+            method: 'POST',
+            body: payload,
+          });
+
+          if (response.error) {
+            const errData = response.error.data as { message?: string; error?: { message?: string } | string };
+            const errMsg =
+              typeof errData?.error === 'object' && errData?.error?.message
+                ? errData.error.message
+                : typeof errData?.error === 'string'
+                ? errData.error
+                : errData?.message || 'Registration failed. Please check your inputs.';
+            throw new Error(errMsg);
+          }
+
+          const json = response.data as AuthResponse;
+          return { data: json };
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: message,
+            },
+          };
+        }
+      },
+      invalidatesTags: ['Auth'],
+    }),
+
+    // User Logout Mutation
+    logoutUser: builder.mutation<{ success: boolean; message: string }, void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        try {
+          await fetchWithBQ({
+            url: `/v1/auth/logout`,
+            method: 'POST',
+          });
+          return { data: { success: true, message: 'Logged out successfully.' } };
+        } catch {
+          return { data: { success: true, message: 'Logged out.' } };
+        }
+      },
+      invalidatesTags: ['Auth'],
+    }),
+
+    // Get Current Authenticated User Profile
+    getMeUser: builder.query<{ success: boolean; data: { user: AuthUser } }, void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        try {
+          const response = await fetchWithBQ({
+            url: `/v1/auth/me`,
+            method: 'GET',
+          });
+          if (response.error || !response.data) {
+            return { error: response.error || { status: 401, data: 'Unauthorized' } };
+          }
+          return { data: response.data as { success: boolean; data: { user: AuthUser } } };
+        } catch (err: unknown) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: err instanceof Error ? err.message : 'Failed to fetch user profile.',
+            },
+          };
+        }
+      },
+      providesTags: ['Auth'],
+    }),
   }),
 });
 
@@ -431,4 +547,9 @@ export const {
   useVerifyDonationPaymentMutation,
   useSubmitVolunteerMutation,
   useSubmitContactMutation,
+  useLoginUserMutation,
+  useSignUpUserMutation,
+  useLogoutUserMutation,
+  useGetMeUserQuery,
 } = publicApi;
+

@@ -6,6 +6,8 @@ import Campaigns from '../pages/Campaigns/Campaigns';
 import OurWork from '../pages/OurWork/OurWork';
 import Donate from '../pages/Donate/Donate';
 import Contact from '../pages/Contact/Contact';
+import Login from '../pages/Auth/Login';
+import SignUp from '../pages/Auth/SignUp';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -21,6 +23,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="campaigns" element={<Campaigns />} />
         <Route path="donate" element={<Donate />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
       </Route>
 
       {/* Non-prefixed route fallbacks */}
@@ -29,6 +33,8 @@ export const AppRoutes: React.FC = () => {
       <Route path="/campaigns" element={<Navigate to="/en/campaigns" replace />} />
       <Route path="/donate" element={<Navigate to="/en/donate" replace />} />
       <Route path="/contact" element={<Navigate to="/en/contact" replace />} />
+      <Route path="/login" element={<Navigate to="/en/login" replace />} />
+      <Route path="/signup" element={<Navigate to="/en/signup" replace />} />
 
       {/* Catch-all fallback */}
       <Route path="*" element={<Navigate to="/en/" replace />} />
