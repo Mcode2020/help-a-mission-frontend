@@ -52,5 +52,39 @@ export interface ContactFormData {
   message: string;
 }
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  status: string;
+  lastLoginAt?: string | null;
+  createdAt?: string;
+}
+
+export interface LoginPayload {
+  identifier: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+export interface SignUpPayload {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: AuthUser;
+    token: string;
+    expiresAt: string;
+  };
+}
+
+
 export * from './cms';
 

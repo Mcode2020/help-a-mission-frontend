@@ -1,5 +1,20 @@
 # Frontend Changelog
 
+## 2026-10-09 — Implement Login & Sign Up Auth Pages (feature)
+- **Date**: 2026-10-09
+- **Type**: feature / ui / auth
+- **Problem**:
+  - The application lacked dedicated Login and Sign Up pages for donors, volunteers, and society members.
+  - Users could not navigate to authentication workflows from the header or mobile menu.
+- **Design / Solution**:
+  - **Login Page (`src/pages/Auth/Login.tsx`)**: Responsive dual-pane layout featuring brand hero banner, role selector tabs (Donor / Volunteer / Member), email/phone login form, password visibility toggle, remember me checkbox, interactive "Forgot Password?" modal, social auth buttons, and validation state.
+  - **Sign Up Page (`src/pages/Auth/SignUp.tsx`)**: Matching responsive layout featuring full name, email, phone number, role selection, password strength indicator, terms checkbox, and instant registration confirmation modal.
+  - **Locale Translations (`src/locales/en.json`, `src/locales/hi.json`)**: Added complete English & Hindi i18n keys for authentication UI strings and navigation.
+  - **Navigation Integration (`src/components/layout/Navbar.tsx`, `MobileMenu.tsx`, `AppRoutes.tsx`)**: Added Sign In / Register buttons in header and mobile drawer, connected routes (`/:lang/login`, `/:lang/signup`, `/:lang/register`), and added non-prefixed fallback routes.
+- **Status**: done
+- **Verified**:
+  - `cmd /c npm run build` (`tsc -b && vite build`): PASS (0 errors, built 1974 modules in 2.74s)
+
 ## 2026-10-08 — Fix DonationSection.tsx Syntax Error (bugfix)
 - **Date**: 2026-10-08
 - **Type**: bugfix / syntax

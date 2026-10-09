@@ -1,0 +1,12 @@
+{
+  "agent": "compliance-gate",
+  "at": "2026-10-09T06:38:44Z",
+  "workspace": "D:\\Help-A-Mission-Welfare-Society\\help-a-mission-frontend",
+  "code_allowed": true,
+  "compliance_passed": true,
+  "skipped": true,
+  "reason": "no team-memory.json \u2014 bootstrap first",
+  "mcp_tool": "run_compliance_gate",
+  "current_branch": "feat/home-page",
+  "path_fp": "9576da541c7f4b9b"
+}

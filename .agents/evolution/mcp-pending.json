@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-09T06:17:00Z",
+  "jobs": [
+    {
+      "script": "build-session-snapshot.py",
+      "job_type": "session-warm",
+      "status": "pending",
+      "enqueued_at": "2026-10-09T06:15:55Z",
+      "workspace": "D:\\Help-A-Mission-Welfare-Society\\help-a-mission-frontend",
+      "job": {
+        "ok": true,
+        "runtime": "jsonl",
+        "queued_file": true
+      }
+    },
+    {
+      "script": "auto-pipeline.py",
+      "job_type": "script-run",
+      "status": "pending",
+      "enqueued_at": "2026-10-09T06:17:00Z",
+      "workspace": "D:\\Help-A-Mission-Welfare-Society\\help-a-mission-frontend",
+      "job": {
+        "ok": true,
+        "runtime": "jsonl",
+        "queued_file": true
+      }
+    }
+  ]
+}
